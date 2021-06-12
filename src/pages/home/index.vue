@@ -1,16 +1,6 @@
 <template>
-    <div>
-        <HelloWorld msg="Hello Vue 3 + TypeScript + Vite" />
-    </div>
+  <div class="home">
+    <van-button type="primary">测试</van-button>
+  </div>
 </template>
-<script lang="ts">
-import { defineComponent } from 'vue'
-import HelloWorld from '../../components/HelloWorld.vue'
-
-export default defineComponent({
-  name: 'home',
-  components: {
-    HelloWorld,
-  },
-})
-</script>
+<script lang="ts" setup></script>
