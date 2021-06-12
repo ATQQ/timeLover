@@ -13,6 +13,10 @@ export default defineComponent({
 </script>
 
 <style>
+* {
+  margin: 0;
+  /* padding: 0; */
+}
 @media screen and (min-width: 320px) {
   html {
     font-size: 12px;
