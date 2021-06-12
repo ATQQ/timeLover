@@ -1,13 +1,37 @@
 <template>
-  <router-view></router-view>
+  <div class="app">
+    <router-view></router-view>
+  </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from 'vue'
+import { defineComponent } from 'vue'
 
 export default defineComponent({
   name: 'App',
 })
 </script>
 
-<style></style>
+<style>
+@media screen and (min-width: 320px) {
+  html {
+    font-size: 12px;
+  }
+}
+@media screen and (min-width: 360px) {
+  html {
+    font-size: 13.5px;
+  }
+}
+@media screen and (min-width: 375px) {
+  html {
+    font-size: 14.0625px;
+  }
+}
+</style>
+<style scoped>
+.app {
+  max-width: 414px;
+  margin: 0 auto;
+}
+</style>
