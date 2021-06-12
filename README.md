@@ -1,41 +1,51 @@
-# Vite2.x + Vue 3.x + Typescript
+# TimeLover(时光恋人)
+>重启两年前的项目
+## 简介
+一款情侣之间记录日常生活趣事,生活足迹的Web应用
 
-[preview](https://vite-vue3-template-2d76i8beae2d0-1256505457.tcloudbaseapp.com/)
-## Features
-* [x] [vite](https://github.com/vitejs/vite)
-* [x] [vue3](https://v3.vuejs.org/)
-* [x] [@vue/compiler-sfc](https://github.com/vuejs/rfcs/pull/227)
-* [x] [TypeScript](https://github.com/microsoft/TypeScript/#readme)
-* [x] [Vuex](https://github.com/vuejs/vuex#readme)
-* [x] [Vue-Router](https://next.router.vuejs.org/)
-* [x] [Axios](https://github.com/axios/axios)
-* [x] [Provide/inject](https://v3.vuejs.org/guide/component-provide-inject.html#provide-inject)
-* [x] [polyfill.io](https://github.com/Financial-Times/polyfill-service)
-* [x] [Element UI Plus](https://github.com/element-plus/element-plus)
-* [x] [Sass](https://github.com/sass/sass)
-* [x] [Eslint](https://eslint.org/)
-* [x] [Jest](https://jestjs.io/)
-## Clone Template
-```sh
-npx degit atqq/vite-vue3-template#main my-project
-```
-## Usage
-### install dep
+## 功能介绍
+### 基础
+* [ ] 验证码登录
+
+### 体重记录
+* [ ] 记录体重信息
+* [ ] 多样化/个性化的数据统计
+
+<!--旧
+* 基础
+  * 登录
+  * 注册
+  * 重置密码
+  * 完善个人信息
+  * 绑定恋人账号
+* 核心
+  * 发表纪念日信息
+  * 足迹
+  * 为他/她打分
+* 开发中
+  * 一键呼唤对方起床
+  * 时间胶囊 -->
+
+## 技术方案
+* 前端：Vue3+TypeScript+Vite
+  * 组件库：Vant UI
+* 后端：Node+TypeScript
+  * 数据库：非关系型文档数据库（暂定）
+* 部署：腾讯云Serverless
+
+## 使用
+
+**安装依赖**
 ```sh
 yarn install
 ```
 
-### Dev
+**开发启动**
 ```sh
 yarn dev
 ```
 
-### Build
-```sh
-yarn build
+**生产构建**
 ```
-
-### Preview Build
-```sh
-yarn serve
+yarn build
 ```
