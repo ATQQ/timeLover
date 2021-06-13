@@ -31,11 +31,11 @@ const loginColor = 'linear-gradient(to right, #b8cbb8 0%, #b8cbb8 0%, #b465da 0%
   color: aliceblue;
   text-align: center;
   font-weight: lighter;
-  font-size: 60px;
+  font-size: 4rem;
   padding-top: 22vh;
 }
 .introduce {
-  padding: 10px;
+  padding: 0.5rem;
   color: aliceblue;
   text-align: center;
   p {
@@ -48,9 +48,8 @@ const loginColor = 'linear-gradient(to right, #b8cbb8 0%, #b8cbb8 0%, #b465da 0%
 }
 footer {
   position: absolute;
-  bottom: 20px;
+  bottom: 1.5rem;
   left: 0;
   right: 0;
-  // margin-top: 25vh;
 }
 </style>

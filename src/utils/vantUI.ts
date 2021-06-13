@@ -1,9 +1,8 @@
 import { App } from '@vue/runtime-core'
-
 // 全量引入
-import { Button } from 'vant'
+import { Button, Icon, Toast } from 'vant'
 
-const conponents = [Button]
+const conponents = [Button, Icon, Toast]
 
 export default function mountVantUI(app: App<Element>) {
   conponents.forEach((c) => {
