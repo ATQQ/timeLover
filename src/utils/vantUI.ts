@@ -13,6 +13,10 @@ import {
   Field,
   Calendar,
   Picker,
+  Empty,
+  SwipeCell,
+  Cell,
+  Divider,
 } from 'vant'
 
 const conponents = [
@@ -27,6 +31,10 @@ const conponents = [
   Form,
   Field,
   Picker,
+  Empty,
+  SwipeCell,
+  Cell,
+  Divider,
 ]
 
 export default function mountVantUI(app: App<Element>) {

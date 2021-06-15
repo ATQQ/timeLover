@@ -1,0 +1,59 @@
+.people-dialog {
+  padding: 1rem;
+}
+
+.record-dialog {
+  padding: 1rem 0;
+}
+.current-time {
+  padding-top: 2rem;
+  text-align: center;
+  font-size: 0.65rem;
+  color: #6d6d6d;
+}
+.current-weight {
+  text-align: center;
+  font-size: 3rem;
+  font-weight: bold;
+  span {
+    font-size: 0.8rem;
+    padding-left: 0.5rem;
+    font-weight: normal;
+  }
+}
+.rank {
+  text-align: center;
+  font-weight: bold;
+  font-size: 0.9rem;
+  color: #6d6d6d;
+  margin-bottom: 0.5rem;
+  .inc,
+  .dec {
+    display: inline-block;
+    &::after {
+      display: inline-block;
+      font-weight: bold;
+    }
+  }
+  .dec::after {
+    content: '🠐';
+    color: green;
+    transform: rotate(-90deg);
+  }
+  .inc::after {
+    content: '🠖';
+    color: #ff6034;
+    transform: rotate(-90deg);
+  }
+
+  .res {
+    color: #ff8917;
+  }
+}
+
+.weight-list {
+  padding: 0 0.5rem;
+  overflow-y: scroll;
+  height: calc(100vh - 380px);
+  padding-bottom: 3rem;
+}

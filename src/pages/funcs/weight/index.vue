@@ -17,6 +17,31 @@
         <van-dropdown-item v-model="state.people" :options="peopleOption" />
       </van-dropdown-menu>
     </header>
+
+    <van-empty v-if="weights.length === 0" description="没有记录，点击右下角 + 添加" />
+    <main v-else>
+      <!-- 最近一次的记录 -->
+      <h2 class="current-time">{{ formatDate(weights[0].date) }}</h2>
+      <h1 class="current-weight">{{ weights[0].weight }}<span>公斤</span></h1>
+      <p class="rank" v-for="(t, idx) in overviewData" :key="idx">
+        {{ t.text }}
+        <span :class="t.symbol"></span>
+        <span class="res">{{ t.res }}</span>
+      </p>
+      <van-divider :style="{ color: '#1989fa', borderColor: '#1989fa', padding: '0 16px' }">
+        体重记录
+      </van-divider>
+      <div class="weight-list">
+        <van-swipe-cell v-for="(t, idx) in weights" :key="idx">
+          <van-cell :border="false" :title="formatDate(t.date)">
+            {{ t.weight }}
+          </van-cell>
+          <template #right>
+            <van-button @click="hadnleDeleteWeight(idx)" square type="danger" text="删除" />
+          </template>
+        </van-swipe-cell>
+      </div>
+    </main>
     <!-- 添加记录 -->
     <div class="add-record" @click="handleAddRecord">
       <van-icon name="plus" size="20" />
@@ -98,9 +123,10 @@
 <script setup lang="ts">
 import UnderInput from '@/components/UnderInput.vue'
 import { formatDate } from '@/utils/stringUtil'
-import { Toast } from 'vant'
-import { reactive, ref } from 'vue'
+import { Dialog, Toast } from 'vant'
+import { computed, reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { getWeightDiff, getTimeDiffDes } from './index'
 
 const themeColor = ref('#1989fa')
 
@@ -108,6 +134,22 @@ const router = useRouter()
 const handleBack = () => {
   router.back()
 }
+// 体重数据
+// TODO：从接口获取，按时间排序，从最近的开始
+const weights = reactive([
+  { weight: 48.12, date: new Date('2021-06-15 12:00:00') },
+  { weight: 49.22, date: new Date('2021-06-15 8:00:00') },
+  { weight: 47.12, date: new Date('2021-06-14 8:00:00') },
+  { weight: 48.12, date: new Date('2021-06-13 8:00:00') },
+  { weight: 49.0, date: new Date('2021-06-12 8:00:00') },
+  { weight: 49.0, date: new Date('2021-06-11 8:00:00') },
+  { weight: 49.0, date: new Date('2021-06-10 8:00:00') },
+  { weight: 49.0, date: new Date('2021-06-9 8:00:00') },
+  { weight: 49.0, date: new Date('2021-06-8 8:00:00') },
+  { weight: 49.0, date: new Date('2021-06-7 8:00:00') },
+  { weight: 47.0, date: new Date('2021-06-2 7:00:00') },
+])
+
 const state = reactive({
   people: 0,
   showTime: false,
@@ -149,6 +191,7 @@ const handleAddRecord = () => {
   state.date = formatDate(now, 'yyyy/MM/dd')
   state.time = formatDate(now, 'hh:mm')
   // 展示最近一次的记录
+  state.weight = weights.length > 0 ? weights[0].weight : 50.0
   showAddRecord.value = true
 }
 
@@ -166,21 +209,84 @@ const handleSureDate = (date: Date) => {
   state.showCalendar = false
 }
 
+// 添加记录
 const handleSureRecord = () => {
   const date = new Date(`${state.date} ${state.time}`)
-  const weight = +state.weight
-  if (!weight || weight <= 0) {
+  let weight = +state.weight
+  if (weight <= 0) {
     return
   }
-
-  console.log(date, weight)
+  weight = +weight.toFixed(2)
+  // TODO：调用接口
+  // 按时间顺序插入
+  const idx = weights.findIndex((v) => v.date <= date)
+  if (idx === -1) {
+    weights.push({
+      weight,
+      date,
+    })
+  } else {
+    weights.splice(idx, 0, {
+      weight,
+      date,
+    })
+  }
+  showAddRecord.value = false
 }
+
+// 删除记录
+const hadnleDeleteWeight = (idx: number) => {
+  Dialog.confirm({
+    title: '提示',
+    message: '确认移除此条记录？',
+  })
+    .then(() => {
+      weights.splice(idx, 1)
+      // TODO：调用接口
+    })
+    .catch(() => {
+      // on cancel
+    })
+}
+// 格式化内容展示
+const overviewData = computed(() => {
+  const res = []
+  // 最新的一次
+  const latest = weights[0]
+  // 与上一次比较
+  const lastTime = weights.length === 1 ? weights[0] : weights[1]
+  res.push({
+    text: `与上一次比较(${getTimeDiffDes(latest.date, lastTime.date)})`,
+    ...getWeightDiff(latest.weight, lastTime.weight),
+  })
+  // 与今天第一次比较
+  const todayData = weights.filter(
+    (v) => formatDate(now, 'yyyy-MM-dd') === formatDate(v.date, 'yyyy-MM-dd'),
+  )
+  if (todayData.length !== 0) {
+    const todayFirst = todayData[todayData.length - 1]
+    res.push({
+      text: `与今天首次比较(${getTimeDiffDes(latest.date, todayFirst.date)})`,
+      ...getWeightDiff(latest.weight, todayFirst.weight),
+    })
+  }
+  // 与本月第一次比较
+  const monthData = weights.filter(
+    (v) => formatDate(now, 'yyyy-MM') === formatDate(v.date, 'yyyy-MM'),
+  )
+  if (monthData.length !== 0) {
+    const monthFirst = monthData[monthData.length - 1]
+    res.push({
+      text: `与本月首次比较(${getTimeDiffDes(latest.date, monthFirst.date)})`,
+      ...getWeightDiff(latest.weight, monthFirst.weight),
+    })
+  }
+  return res
+})
 </script>
 
 <style lang="scss" scoped>
-.people-dialog {
-  padding: 1rem;
-}
+@import './index.scss';
 .add-record {
   position: fixed;
   right: 2rem;
@@ -193,8 +299,5 @@ const handleSureRecord = () => {
   display: flex;
   justify-content: center;
   align-items: center;
-}
-.record-dialog {
-  padding: 1rem 0;
 }
 </style>
