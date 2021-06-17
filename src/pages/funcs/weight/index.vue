@@ -14,7 +14,11 @@
     <!-- 选人 -->
     <header>
       <van-dropdown-menu :active-color="themeColor">
-        <van-dropdown-item v-model="state.people" :options="peopleOption" />
+        <van-dropdown-item
+          @change="handleSelectPeople"
+          v-model="state.people"
+          :options="peopleOption"
+        />
       </van-dropdown-menu>
     </header>
 
@@ -121,10 +125,13 @@
   </div>
 </template>
 <script setup lang="ts">
+import { familyApi, recordApi } from '@/apis'
 import UnderInput from '@/components/UnderInput.vue'
 import { formatDate } from '@/utils/stringUtil'
 import { Dialog, Toast } from 'vant'
-import { computed, reactive, ref } from 'vue'
+import {
+  computed, onMounted, reactive, ref,
+} from 'vue'
 import { useRouter } from 'vue-router'
 import { getWeightDiff, getTimeDiffDes } from './index'
 
@@ -134,32 +141,36 @@ const router = useRouter()
 const handleBack = () => {
   router.back()
 }
+
 // 体重数据
 // TODO：从接口获取，按时间排序，从最近的开始
-const weights = reactive([
-  { weight: 48.12, date: new Date('2021-06-15 12:00:00') },
-  { weight: 49.22, date: new Date('2021-06-15 8:00:00') },
-  { weight: 47.12, date: new Date('2021-06-14 8:00:00') },
-  { weight: 48.12, date: new Date('2021-06-13 8:00:00') },
-  { weight: 49.0, date: new Date('2021-06-12 8:00:00') },
-  { weight: 49.0, date: new Date('2021-06-11 8:00:00') },
-  { weight: 49.0, date: new Date('2021-06-10 8:00:00') },
-  { weight: 49.0, date: new Date('2021-06-9 8:00:00') },
-  { weight: 49.0, date: new Date('2021-06-8 8:00:00') },
-  { weight: 49.0, date: new Date('2021-06-7 8:00:00') },
-  { weight: 47.0, date: new Date('2021-06-2 7:00:00') },
-])
+const weights: any[] = reactive([])
 
 const state = reactive({
-  people: 0,
+  people: 'default',
   showTime: false,
   time: '',
   showCalendar: false,
   date: '',
   weight: 0,
 })
-const peopleOption = reactive([{ text: '默认', value: 0 }])
+const peopleOption = reactive([{ text: '默认', value: 'default' }])
 
+const refreshRecord = (familyId: string) => {
+  recordApi.getList(familyId).then((res) => {
+    const { records } = res.data
+    weights.splice(0, weights.length)
+    records.forEach((r: any) => {
+      r.date = new Date(r.date)
+    })
+    weights.push(...records)
+  })
+}
+
+// 切换成员
+const handleSelectPeople = (value: string) => {
+  refreshRecord(value)
+}
 // 添加家人相关
 const newPoepleName = ref('')
 const showAddPeople = ref(false)
@@ -173,14 +184,16 @@ const handleSurePeople = () => {
   if (!newPoepleName.value) {
     return
   }
-  // 临时写法
-  peopleOption.push({
-    text: newPoepleName.value,
-    value: peopleOption.length + 1,
-  })
+
   showAddPeople.value = false
-  Toast.success('添加成功')
-  // TODO: 调用接口
+  familyApi.addPeople(newPoepleName.value).then((res) => {
+    Toast.success('添加成功')
+    const { familyId } = res.data
+    peopleOption.push({
+      text: newPoepleName.value,
+      value: familyId,
+    })
+  })
 }
 
 // 添加记录相关
@@ -217,20 +230,23 @@ const handleSureRecord = () => {
     return
   }
   weight = +weight.toFixed(2)
-  // TODO：调用接口
   // 按时间顺序插入
   const idx = weights.findIndex((v) => v.date <= date)
-  if (idx === -1) {
-    weights.push({
+  recordApi.addRecord(state.people, weight, date).then((res) => {
+    const { recordId } = res.data
+    const w = {
       weight,
       date,
-    })
-  } else {
-    weights.splice(idx, 0, {
-      weight,
-      date,
-    })
-  }
+      recordId,
+    }
+    if (idx === -1) {
+      weights.push(w)
+    } else {
+      weights.splice(idx, 0, w)
+    }
+    Toast.success('记录成功')
+  })
+
   showAddRecord.value = false
 }
 
@@ -241,8 +257,9 @@ const hadnleDeleteWeight = (idx: number) => {
     message: '确认移除此条记录？',
   })
     .then(() => {
-      weights.splice(idx, 1)
-      // TODO：调用接口
+      recordApi.delRecord(weights[idx].recordId).then(() => {
+        weights.splice(idx, 1)
+      })
     })
     .catch(() => {
       // on cancel
@@ -282,6 +299,20 @@ const overviewData = computed(() => {
     })
   }
   return res
+})
+
+onMounted(() => {
+  familyApi.getList().then((res) => {
+    const { families } = res.data
+    for (const f of families) {
+      peopleOption.push({
+        text: f.name,
+        value: f.familyId,
+      })
+    }
+  })
+
+  refreshRecord(state.people)
 })
 </script>
 
