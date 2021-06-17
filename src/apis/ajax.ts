@@ -26,10 +26,10 @@ instance.interceptors.request.use((config) => {
     })
   }
 
-  return ({
+  return {
     ...config,
     headers,
-  })
+  }
 })
 
 /**
@@ -38,14 +38,15 @@ instance.interceptors.request.use((config) => {
 instance.interceptors.response.use((v) => {
   if (v.data?.code === 401) {
     localStorage.removeItem('token')
-    // alert('即将跳转登录页。。。', '登录过期')
-    // setTimeout(redirectHome, 1500)
+    // 未登录
+    window.location.href = '/'
     return v.data
   }
   if (v.status === 200) {
+    if (v.data.code !== 0) {
+      return Promise.reject(v.data)
+    }
     return v.data
   }
-  // alert(v.statusText, '网络错误')
-  return Promise.reject(v)
 })
 export default instance

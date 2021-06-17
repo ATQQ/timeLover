@@ -17,11 +17,30 @@
     <router-link to="/" class="go-home">
       <van-icon name="wap-home-o" />
     </router-link>
+    <div class="exit" @click="handleLogout">
+      <van-icon name="close" />
+    </div>
   </div>
 </template>
 <script lang="ts" setup>
-import { reactive } from 'vue'
+import { Dialog } from 'vant'
+import { useRouter } from 'vue-router'
 import FunCard from './components/FunCard.vue'
+
+const router = useRouter()
+const handleLogout = () => {
+  Dialog.confirm({
+    title: '提示',
+    message: '确认注销登录吗?',
+  })
+    .then(() => {
+      localStorage.removeItem('token')
+      router.replace({ name: 'home' })
+    })
+    .catch(() => {
+      // on cancel
+    })
+}
 </script>
 
 <style lang="scss" scoped>
@@ -52,6 +71,19 @@ import FunCard from './components/FunCard.vue'
   height: 2.5rem;
   text-align: center;
   padding-top: 0.2rem;
+  background-color: #fff;
+}
+
+.exit {
+  position: fixed;
+  right: 2rem;
+  bottom: 1rem;
+  font-size: 2rem;
+  border-radius: 50%;
+  width: 2.2rem;
+  height: 2.2rem;
+  padding: 0.2rem;
+  text-align: center;
   background-color: #fff;
 }
 </style>

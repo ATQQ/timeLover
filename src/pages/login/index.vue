@@ -40,15 +40,25 @@
       >
         登录
       </van-button>
+      <van-button
+        color="linear-gradient(120deg, #f093fb 0%, #f5576c 100%)"
+        @click="handleTestLogin"
+        block
+        size="small"
+        type="primary"
+      >
+        使用测试号体验
+      </van-button>
     </div>
   </div>
 </template>
 <script lang="ts" setup>
-import { computed, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import UnderInput from '@/components/UnderInput.vue'
 import { rCode, rMobile } from '@/utils/regexp'
 import { Toast } from 'vant'
 import { useRouter } from 'vue-router'
+import { userApi } from '@/apis'
 
 const phone = ref('')
 const code = ref('')
@@ -76,28 +86,62 @@ const getCode = () => {
     time.value -= 1
     codeText.value = `剩余${time.value}秒`
   }, 1000)
-  // TODO：调接口发请求 ddl 2021-06-15
-  Toast.success('发送成功')
+  userApi
+    .getCode(phone.value)
+    .then((res) => {
+      Toast.success('发送成功')
+    })
+    .catch(() => {
+      Toast.fail('格式错误')
+    })
 }
 
 const router = useRouter()
-/**
- * TODO:登录
- * ddl 2021-06-15
- */
+
 const handleLogin = () => {
-  // 发请求
-  // 持久化登录凭证
-  // 登陆成功跳转
-  router.replace({
-    name: 'dashboard',
-  })
+  userApi
+    .login(phone.value, code.value)
+    .then((res) => {
+      const { token } = res.data
+      localStorage.setItem('token', token)
+      // 发请求
+      // 持久化登录凭证
+      // 登陆成功跳转
+      router.replace({
+        name: 'dashboard',
+      })
+    })
+    .catch(() => {
+      Toast.fail('验证码不对')
+    })
 }
 // 禁用登录按钮
 const disableLogin = computed(() => !rCode.test(code.value) || !rMobile.test(phone.value))
 
 // 禁用验证码按钮
 const disableCode = computed(() => !rMobile.test(phone.value) || time.value !== 0)
+
+const handleTestLogin = () => {
+  userApi.login('13245678910', '1234').then((res) => {
+    const { token } = res.data
+    localStorage.setItem('token', token)
+    // 发请求
+    // 持久化登录凭证
+    // 登陆成功跳转
+    router.replace({
+      name: 'dashboard',
+    })
+  })
+}
+
+// token未过期，自动登录
+onMounted(() => {
+  if (localStorage.getItem('token')) {
+    router.replace({
+      name: 'dashboard',
+    })
+  }
+})
 </script>
 
 <style lang="scss" scoped>
