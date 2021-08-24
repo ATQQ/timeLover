@@ -36,14 +36,16 @@
     }
   }
   .dec::after {
-    content: '🠐';
+    content: '轻';
     color: green;
-    transform: rotate(-90deg);
+    font-size: 10px;
+    transform: scale(0.8);
   }
   .inc::after {
-    content: '🠖';
+    content: '增加';
     color: #ff6034;
-    transform: rotate(-90deg);
+    font-size: 10px;
+    transform: scale(0.8);
   }
 
   .res {
