@@ -26,7 +26,10 @@
     <main v-else>
       <!-- 最近一次的记录 -->
       <h2 class="current-time">{{ formatDate(weights[0].date) }}</h2>
-      <h1 class="current-weight">{{ weights[0].weight }}<span>公斤</span></h1>
+      <h1 class="current-weight">
+        {{ weights[0].weight }}<span>kg</span><span class="jin">{{ weights[0].weight * 2 }}</span
+        ><span>斤</span>
+      </h1>
       <p class="rank" v-for="(t, idx) in overviewData" :key="idx">
         {{ t.text }}
         <span :class="t.symbol"></span>
@@ -328,5 +331,9 @@ onMounted(() => {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+.jin {
+  font-size: 1rem;
+  line-height: 1rem;
 }
 </style>
