@@ -35,6 +35,7 @@
         <span :class="t.symbol"></span>
         <span class="res">{{ t.res }}</span>
       </p>
+      <canvas ref="mychart" style="width: 100%; height: 220px"></canvas>
       <van-divider :style="{ color: '#1989fa', borderColor: '#1989fa', padding: '0 16px' }">
         体重记录
       </van-divider>
@@ -133,7 +134,7 @@ import { familyApi, recordApi } from '@/apis'
 import { formatDate } from '@/utils/stringUtil'
 import { Dialog, Toast } from 'vant'
 import {
-  computed, onMounted, reactive, ref,
+  computed, onMounted, reactive, ref, watchEffect,
 } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
@@ -311,6 +312,80 @@ const overviewData = computed(() => {
   return res
 })
 
+const mychart = ref(null as unknown as HTMLElement)
+watchEffect(() => {
+  if (weights.length !== 0 && mychart.value) {
+    const data = [
+      ...weights.map((v, idx) => ({
+        weight: v.weight,
+        date: v.date,
+        idx,
+      })),
+    ]
+    data.sort((a, b) => a.date - b.date)
+    data.forEach((v, idx) => {
+      v.idx = idx + 1
+    })
+
+    // Step 1: 创建 Chart 对象
+    const chart = new window.F2.Chart({
+      el: mychart.value,
+      pixelRatio: window.devicePixelRatio, // 指定分辨率
+    })
+    const wMax = Math.max(...data.map((v) => v.weight))
+    const wMin = Math.min(...data.map((v) => v.weight))
+    const buf = 4
+    chart.source(data, {
+      weight: {
+        min: wMin - buf > 0 ? wMin - buf : 0,
+        max: wMax + buf,
+      },
+    })
+    chart.tooltip({
+      showCrosshairs: true,
+      showItemMarker: false,
+      background: {
+        radius: 2,
+        fill: '#1890FF',
+        padding: [3, 5],
+      },
+      nameStyle: {
+        fill: '#fff',
+      },
+      onShow: function onShow(ev) {
+        const { items } = ev
+        const { date } = items[0].origin
+        items[0].name = `时间${formatDate(date, 'yyyy-MM-dd hh:mm')} 体重`
+      },
+    })
+    chart.line().position('idx*weight')
+    chart.point().position('idx*weight').style({
+      lineWidth: 1,
+      stroke: '#fff',
+    })
+
+    chart.interaction('pan')
+
+    // 定义进度条
+    chart.scrollBar({
+      mode: 'x',
+      xStyle: {
+        size: 2,
+      },
+    })
+
+    // 绘制 tag
+    // chart.guide().tag({
+    //   position: [1969, 1344],
+    //   withPoint: false,
+    //   content: '1,344',
+    //   limitInPlot: true,
+    //   offsetX: 5,
+    //   direct: 'cr',
+    // })
+    chart.render()
+  }
+})
 onMounted(() => {
   refreshFamilies()
   refreshRecord(state.people)
