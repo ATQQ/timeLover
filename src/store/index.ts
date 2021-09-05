@@ -1,10 +1,9 @@
 import { createStore } from 'vuex'
-import module1 from './modules/module1'
-
+import weight from './modules/weight'
 // Create a new store instance.
 const store = createStore({
   modules: {
-    m1: module1,
+    weight,
   },
 })
 

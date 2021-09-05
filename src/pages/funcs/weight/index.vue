@@ -125,15 +125,18 @@
   </div>
 </template>
 <script setup lang="ts">
-import { familyApi, recordApi } from '@/apis'
 import UnderInput from '@/components/UnderInput.vue'
+import { familyApi, recordApi } from '@/apis'
 import { formatDate } from '@/utils/stringUtil'
 import { Dialog, Toast } from 'vant'
 import {
   computed, onMounted, reactive, ref,
 } from 'vue'
 import { useRouter } from 'vue-router'
+import { useStore } from 'vuex'
 import { getWeightDiff, getTimeDiffDes } from './index'
+
+const store = useStore()
 
 const themeColor = ref('#1989fa')
 
@@ -141,10 +144,6 @@ const router = useRouter()
 const handleBack = () => {
   router.back()
 }
-
-// 体重数据
-// TODO：从接口获取，按时间排序，从最近的开始
-const weights: any[] = reactive([])
 
 const state = reactive({
   people: 'default',
@@ -154,17 +153,16 @@ const state = reactive({
   date: '',
   weight: 0,
 })
-const peopleOption = reactive([{ text: '默认', value: 'default' }])
+
+// 默认选择
+// 体重数据
+const { weights, peopleOption } = store.state.weight as WeightState
 
 const refreshRecord = (familyId: string) => {
-  recordApi.getList(familyId).then((res) => {
-    const { records } = res.data
-    weights.splice(0, weights.length)
-    records.forEach((r: any) => {
-      r.date = new Date(r.date)
-    })
-    weights.push(...records)
-  })
+  store.dispatch('weight/getRecords', { familyId })
+}
+const refreshFamilies = () => {
+  store.dispatch('weight/getFamilyList')
 }
 
 // 切换成员
@@ -193,6 +191,11 @@ const handleSurePeople = () => {
       text: newPoepleName.value,
       value: familyId,
     })
+    // 缓存数据
+    localStorage.setItem('families', JSON.stringify(peopleOption.slice(1)))
+
+    // 刷新选择
+    state.people = familyId
   })
 }
 
@@ -236,7 +239,7 @@ const handleSureRecord = () => {
     const { recordId } = res.data
     const w = {
       weight,
-      date,
+      date: +date,
       recordId,
     }
     if (idx === -1) {
@@ -245,6 +248,8 @@ const handleSureRecord = () => {
       weights.splice(idx, 0, w)
     }
     Toast.success('记录成功')
+    // 缓存数据
+    localStorage.setItem(state.people, JSON.stringify(weights))
   })
 
   showAddRecord.value = false
@@ -259,6 +264,8 @@ const hadnleDeleteWeight = (idx: number) => {
     .then(() => {
       recordApi.delRecord(weights[idx].recordId).then(() => {
         weights.splice(idx, 1)
+        // 缓存数据
+        localStorage.setItem(state.people, JSON.stringify(weights))
       })
     })
     .catch(() => {
@@ -302,16 +309,7 @@ const overviewData = computed(() => {
 })
 
 onMounted(() => {
-  familyApi.getList().then((res) => {
-    const { families } = res.data
-    for (const f of families) {
-      peopleOption.push({
-        text: f.name,
-        value: f.familyId,
-      })
-    }
-  })
-
+  refreshFamilies()
   refreshRecord(state.people)
 })
 </script>
