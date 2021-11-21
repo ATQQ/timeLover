@@ -91,8 +91,8 @@ const getCode = () => {
     .then((res) => {
       Toast.success('发送成功')
     })
-    .catch(() => {
-      Toast.fail('格式错误')
+    .catch((err) => {
+      Toast.fail(err.msg)
     })
 }
 
