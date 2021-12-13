@@ -45,12 +45,12 @@
 
       <div class="weight-list">
         <van-swipe-cell v-for="(t, idx) in showWeights" :key="idx">
-          <van-cell
-            :title-style="{ flex: 8 }"
-            :border="false"
-            :title="`${formatDate(t.date)}${t.tips ? ` - ${t.tips}` : ''}`"
-            >{{ t.weight }}</van-cell
-          >
+          <van-cell :title-style="{ flex: 1.1 }" :border="false" :title="formatDate(t.date)">
+            <div style="display: flex; justify-content: space-between">
+              <span>{{ t.weight }}</span>
+              <span>{{ t.tips || '' }}</span>
+            </div>
+          </van-cell>
           <template #right>
             <van-button @click="hadnleDeleteWeight(idx)" square type="danger" text="删除" />
           </template>
@@ -268,12 +268,15 @@ const handleSureRecord = () => {
   weight = +weight.toFixed(2)
   // 按时间顺序插入
   const idx = weights.findIndex((v) => v.date <= date)
-  recordApi.addRecord(state.people, weight, date, state.tips).then((res) => {
+  const { tips } = state
+  state.tips = ''
+  recordApi.addRecord(state.people, weight, date, tips).then((res) => {
     const { recordId } = res.data
     const w = {
       weight,
       date: +date,
       recordId,
+      tips,
     }
     if (idx === -1) {
       weights.push(w)
