@@ -17,6 +17,7 @@ import {
   SwipeCell,
   Cell,
   Divider,
+  Search,
 } from 'vant'
 
 const conponents = [
@@ -35,6 +36,7 @@ const conponents = [
   SwipeCell,
   Cell,
   Divider,
+  Search,
 ]
 
 export default function mountVantUI(app: App<Element>) {

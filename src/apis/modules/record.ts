@@ -4,10 +4,11 @@ function getList(familyId: string) {
   return ajax.get(`/record/${familyId}`)
 }
 
-function addRecord(familyId: string, weight: number, date: Date) {
+function addRecord(familyId: string, weight: number, date: Date, tips?: string) {
   return ajax.post(`/record/${familyId}`, {
     weight,
     date,
+    tips,
   })
 }
 

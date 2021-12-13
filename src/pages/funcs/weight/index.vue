@@ -27,8 +27,10 @@
       <!-- 最近一次的记录 -->
       <h2 class="current-time">{{ formatDate(weights[0].date) }}</h2>
       <h1 class="current-weight">
-        {{ weights[0].weight }}<span>kg</span><span class="jin">{{ weights[0].weight * 2 }}</span
-        ><span>斤</span>
+        {{ weights[0].weight }}
+        <span>kg</span>
+        <span class="jin">{{ weights[0].weight * 2 }}</span>
+        <span>斤</span>
       </h1>
       <p class="rank" v-for="(t, idx) in overviewData" :key="idx">
         {{ t.text }}
@@ -36,14 +38,19 @@
         <span class="res">{{ t.res }}</span>
       </p>
       <canvas ref="mychart" style="width: 100%; height: 220px"></canvas>
-      <van-divider :style="{ color: '#1989fa', borderColor: '#1989fa', padding: '0 16px' }">
-        体重记录
-      </van-divider>
+      <van-divider :style="{ color: '#1989fa', borderColor: '#1989fa', padding: '0 16px' }"
+        >体重记录</van-divider
+      >
+      <van-search v-model="searchWeight" placeholder="请输入过滤关键词" input-align="center" />
+
       <div class="weight-list">
-        <van-swipe-cell v-for="(t, idx) in weights" :key="idx">
-          <van-cell :border="false" :title="formatDate(t.date)">
-            {{ t.weight }}
-          </van-cell>
+        <van-swipe-cell v-for="(t, idx) in showWeights" :key="idx">
+          <van-cell
+            :title-style="{ flex: 8 }"
+            :border="false"
+            :title="`${formatDate(t.date)}${t.tips ? ` - ${t.tips}` : ''}`"
+            >{{ t.weight }}</van-cell
+          >
           <template #right>
             <van-button @click="hadnleDeleteWeight(idx)" square type="danger" text="删除" />
           </template>
@@ -107,6 +114,14 @@
           label="体重(公斤)"
           placeholder="点击设置体重"
         />
+        <van-field
+          v-model="state.tips"
+          clickable
+          type="text"
+          name="tips"
+          label="备注"
+          placeholder="(选填)"
+        />
       </div>
     </van-dialog>
     <!-- 时间 -->
@@ -132,7 +147,7 @@
 import UnderInput from '@/components/UnderInput.vue'
 import { familyApi, recordApi } from '@/apis'
 import { formatDate } from '@/utils/stringUtil'
-import { Dialog, Toast } from 'vant'
+import { Dialog, Toast, Search } from 'vant'
 import {
   computed, onMounted, reactive, ref, watchEffect,
 } from 'vue'
@@ -156,11 +171,21 @@ const state = reactive({
   showCalendar: false,
   date: '',
   weight: 0,
+  tips: '',
 })
 
 // 默认选择
 // 体重数据
 const { weights, peopleOption } = store.state.weight as WeightState
+
+// 搜索关键字
+const searchWeight = ref('')
+
+// 实际展示的列表
+const showWeights = computed(() => weights.filter((w) => {
+  if (!searchWeight.value) return true
+  return `${formatDate(w.date)}${w.tips || ''}${w.weight}`.includes(searchWeight.value)
+}))
 
 const refreshRecord = (familyId: string) => {
   store.dispatch('weight/getRecords', { familyId })
@@ -186,7 +211,11 @@ const handleSurePeople = () => {
   if (!newPoepleName.value) {
     return
   }
-
+  // 去重
+  if (peopleOption.find((v) => v.text === newPoepleName.value)) {
+    Toast.fail('名称已存在')
+    return
+  }
   showAddPeople.value = false
   familyApi.addPeople(newPoepleName.value).then((res) => {
     Toast.success('添加成功')
@@ -239,7 +268,7 @@ const handleSureRecord = () => {
   weight = +weight.toFixed(2)
   // 按时间顺序插入
   const idx = weights.findIndex((v) => v.date <= date)
-  recordApi.addRecord(state.people, weight, date).then((res) => {
+  recordApi.addRecord(state.people, weight, date, state.tips).then((res) => {
     const { recordId } = res.data
     const w = {
       weight,
@@ -394,6 +423,9 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 @import './index.scss';
+.van-cell {
+  justify-content: space-between;
+}
 .add-record {
   position: fixed;
   right: 2rem;
