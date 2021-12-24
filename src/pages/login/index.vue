@@ -1,7 +1,10 @@
 <template>
   <div class="login">
     <h1>
-      欢迎登录<span><router-link to="/">时光恋人</router-link></span>
+      欢迎登录
+      <span>
+        <router-link to="/">时光恋人</router-link>
+      </span>
     </h1>
     <div class="input-list">
       <UnderInput
@@ -11,13 +14,7 @@
         icon="phone-o"
         :max-length="11"
       />
-      <UnderInput
-        tips="4位数字"
-        v-model="code"
-        placeholder="输入收到的验证码"
-        icon="like-o"
-        :max-length="4"
-      />
+      <UnderInput tips="4位数字" v-model="code" placeholder="输入收到的验证码" icon="like-o" :max-length="4" />
     </div>
     <div class="btn-list">
       <van-button
@@ -27,9 +24,7 @@
         block
         size="small"
         type="primary"
-      >
-        {{ codeText }}
-      </van-button>
+      >{{ codeText }}</van-button>
       <van-button
         :disabled="disableLogin"
         color="linear-gradient(120deg, #f093fb 0%, #f5576c 100%)"
@@ -37,27 +32,23 @@
         block
         size="small"
         type="primary"
-      >
-        登录
-      </van-button>
+      >登录</van-button>
       <van-button
         color="linear-gradient(120deg, #f093fb 0%, #f5576c 100%)"
         @click="handleTestLogin"
         block
         size="small"
         type="primary"
-      >
-        使用测试号体验
-      </van-button>
+      >使用测试号体验</van-button>
     </div>
   </div>
 </template>
 <script lang="ts" setup>
 import { computed, onMounted, ref } from 'vue'
-import UnderInput from '@/components/UnderInput.vue'
-import { rCode, rMobile } from '@/utils/regexp'
 import { Toast } from 'vant'
 import { useRouter } from 'vue-router'
+import UnderInput from '@/components/UnderInput.vue'
+import { rCode, rMobile } from '@/utils/regexp'
 import { userApi } from '@/apis'
 
 const phone = ref('')

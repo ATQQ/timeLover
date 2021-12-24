@@ -9,16 +9,13 @@
       @input="handleInput"
     />
   </div>
-  <p v-if="tips" class="tips">
-    {{ tips }}
-  </p>
+  <p v-if="tips" class="tips">{{ tips }}</p>
 </template>
 <script setup lang="ts">
-import { defineProps, useContext } from '@vue/runtime-core'
 // 特别注意：接口类型需要使用 import type 否则编译出错
-import type { PropType } from '@vue/runtime-core'
+import type { PropType } from 'vue'
 
-const ctx = useContext()
+const emits = defineEmits(['update:modelValue'])
 const props = defineProps({
   type: {
     type: String as PropType<string>,
@@ -47,7 +44,8 @@ const props = defineProps({
 })
 
 const handleInput = (e: any) => {
-  ctx.emit('update:modelValue', ((e as InputEvent).target as HTMLInputElement).value)
+  // ctx
+  emits('update:modelValue', ((e as InputEvent).target as HTMLInputElement).value)
 }
 </script>
 <style lang="scss" scoped>

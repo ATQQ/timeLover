@@ -1,5 +1,5 @@
-import { familyApi, recordApi } from '@/apis'
 import { Module } from 'vuex'
+import { familyApi, recordApi } from '@/apis'
 
 const store: Module<WeightState, unknown> = {
   namespaced: true,

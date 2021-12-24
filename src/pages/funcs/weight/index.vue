@@ -38,9 +38,7 @@
         <span class="res">{{ t.res }}</span>
       </p>
       <canvas ref="mychart" style="width: 100%; height: 220px"></canvas>
-      <van-divider :style="{ color: '#1989fa', borderColor: '#1989fa', padding: '0 16px' }"
-        >体重记录</van-divider
-      >
+      <van-divider :style="{ color: '#1989fa', borderColor: '#1989fa', padding: '0 16px' }">体重记录</van-divider>
       <van-search v-model="searchWeight" placeholder="请输入过滤关键词" input-align="center" />
 
       <div class="weight-list">
@@ -71,12 +69,7 @@
       @confirm="handleSurePeople"
     >
       <div class="people-dialog">
-        <UnderInput
-          v-model="newPoepleName"
-          placeholder="昵称"
-          tips="输入要记录的家人昵称"
-          icon="manager-o"
-        />
+        <UnderInput v-model="newPoepleName" placeholder="昵称" tips="输入要记录的家人昵称" icon="manager-o" />
       </div>
     </van-dialog>
     <!-- 添加记录弹窗 -->
@@ -144,15 +137,15 @@
   </div>
 </template>
 <script setup lang="ts">
-import UnderInput from '@/components/UnderInput.vue'
-import { familyApi, recordApi } from '@/apis'
-import { formatDate } from '@/utils/stringUtil'
 import { Dialog, Toast, Search } from 'vant'
 import {
   computed, onMounted, reactive, ref, watchEffect,
 } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
+import { formatDate } from '@/utils/stringUtil'
+import { familyApi, recordApi } from '@/apis'
+import UnderInput from '@/components/UnderInput.vue'
 import { getWeightDiff, getTimeDiffDes } from './index'
 
 const store = useStore()
@@ -425,7 +418,7 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
-@import './index.scss';
+@import "./index.scss";
 .van-cell {
   justify-content: space-between;
 }

@@ -48,5 +48,6 @@ instance.interceptors.response.use((v) => {
     }
     return v.data
   }
+  return v.data
 })
 export default instance

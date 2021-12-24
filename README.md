@@ -45,15 +45,15 @@
 
 **安装依赖**
 ```sh
-yarn install
+pnpm install
 ```
 
 **开发启动**
 ```sh
-yarn dev
+pnpm dev
 ```
 
 **生产构建**
 ```
-yarn build
+pnpm build
 ```

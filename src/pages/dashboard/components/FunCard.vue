@@ -1,23 +1,19 @@
 <template>
-  <div
-    class="fun-card"
-    :class="{
-      disabled,
-    }"
-  >
+  <div class="fun-card" :class="{
+    disabled,
+  }">
     <div>
       <h1 class="title">{{ title }}</h1>
     </div>
     <span v-if="icon" :class="[icon]" class="iconfont icon"></span>
     <!-- lock -->
     <div v-if="disabled" class="lock">
-      <span class="icon-lockclosed iconfont"> </span>
+      <span class="icon-lockclosed iconfont"></span>
     </div>
   </div>
 </template>
 <script setup lang="ts">
-import { defineProps } from '@vue/runtime-core'
-import type { PropType } from '@vue/runtime-core'
+import type { PropType } from 'vue'
 
 const props = defineProps({
   title: {

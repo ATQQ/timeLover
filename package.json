@@ -1,8 +1,9 @@
 {
   "name": "vite-vue3-ts-element-sass-template",
   "version": "0.0.0",
+  "private": "true",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --host",
     "build": "vite build",
     "build:staging": "vite build --mode staging",
     "serve": "vite preview",
@@ -12,33 +13,32 @@
     "tcb:login": "tcb login"
   },
   "dependencies": {
-    "axios": "^0.21.1",
-    "echarts": "^5.2.0",
-    "vant": "^3.0.18",
-    "vue": "^3.1.1",
-    "vue-router": "4",
-    "vuex": "^4.0.0"
+    "axios": "^0.21.4",
+    "echarts": "^5.2.2",
+    "vant": "^3.3.7",
+    "vue": "^3.2.26",
+    "vue-router": "^4.0.12",
+    "vuex": "^4.0.2"
   },
   "devDependencies": {
-    "@cloudbase/cli": "^1.7.0",
-    "@types/axios": "^0.14.0",
-    "@types/jest": "^26.0.23",
-    "@types/node": "^15.3.0",
-    "@typescript-eslint/eslint-plugin": "^4.20.0",
-    "@typescript-eslint/parser": "^4.20.0",
-    "@vitejs/plugin-vue": "^1.1.5",
-    "@vue/compiler-sfc": "^3.1.1",
-    "eslint": "^7.23.0",
+    "@cloudbase/cli": "^1.12.0",
+    "@types/jest": "^26.0.24",
+    "@types/node": "^15.14.9",
+    "@typescript-eslint/eslint-plugin": "^4.33.0",
+    "@typescript-eslint/parser": "^4.33.0",
+    "@vitejs/plugin-vue": "^1.10.2",
+    "@vue/compiler-sfc": "^3.2.26",
+    "eslint": "^7.32.0",
     "eslint-config-airbnb-base": "^14.2.1",
-    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-import": "^2.25.3",
     "eslint-plugin-todo-ddl": "^1.1.1",
-    "eslint-plugin-vue": "^7.8.0",
+    "eslint-plugin-vue": "^7.20.0",
     "jest": "^26.6.3",
-    "sass": "^1.34.1",
+    "sass": "^1.45.1",
     "ts-jest": "^26.5.6",
     "ts-node": "^9.1.1",
-    "typescript": "^4.1.3",
-    "vite": "^2.1.0",
+    "typescript": "^4.5.4",
+    "vite": "^2.7.6",
     "vite-plugin-style-import": "^0.10.1"
   }
 }

@@ -23,7 +23,7 @@ const loginColor = 'linear-gradient(to right, #b8cbb8 0%, #b8cbb8 0%, #b465da 0%
 
 <style lang="scss" scoped>
 .home {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
   background-image: linear-gradient(to top, #f093fb 0%, #f5576c 100%);
   min-height: 100vh;
 }
