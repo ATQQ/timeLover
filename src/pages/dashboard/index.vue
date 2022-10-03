@@ -31,7 +31,7 @@ const router = useRouter()
 const handleLogout = () => {
   Dialog.confirm({
     title: '提示',
-    message: '确认注销登录吗?',
+    message: '确认注销登录吗?'
   })
     .then(() => {
       localStorage.removeItem('token')
@@ -45,7 +45,7 @@ const handleLogout = () => {
 
 <style lang="scss" scoped>
 .dashboard {
-  font-family: "Avenir", Helvetica, Arial, sans-serif;
+  font-family: 'Avenir', Helvetica, Arial, sans-serif;
   background-image: linear-gradient(to top, #f093fb 0%, #f5576c 100%);
   min-height: 100vh;
   padding: 1rem;

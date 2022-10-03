@@ -22,7 +22,10 @@
       </van-dropdown-menu>
     </header>
 
-    <van-empty v-if="weights.length === 0" description="没有记录，点击右下角 + 添加" />
+    <van-empty
+      v-if="weights.length === 0"
+      description="没有记录，点击右下角 + 添加"
+    />
     <main v-else>
       <!-- 最近一次的记录 -->
       <h2 class="current-time">{{ formatDate(weights[0].date) }}</h2>
@@ -38,19 +41,35 @@
         <span class="res">{{ t.res }}</span>
       </p>
       <canvas ref="mychart" style="width: 100%; height: 220px"></canvas>
-      <van-divider :style="{ color: '#1989fa', borderColor: '#1989fa', padding: '0 16px' }">体重记录</van-divider>
-      <van-search v-model="searchWeight" placeholder="请输入过滤关键词" input-align="center" />
+      <van-divider
+        :style="{ color: '#1989fa', borderColor: '#1989fa', padding: '0 16px' }"
+        >体重记录</van-divider
+      >
+      <van-search
+        v-model="searchWeight"
+        placeholder="请输入过滤关键词"
+        input-align="center"
+      />
 
       <div class="weight-list">
         <van-swipe-cell v-for="(t, idx) in showWeights" :key="idx">
-          <van-cell :title-style="{ flex: 1.1 }" :border="false" :title="formatDate(t.date)">
+          <van-cell
+            :title-style="{ flex: 1.1 }"
+            :border="false"
+            :title="formatDate(t.date)"
+          >
             <div style="display: flex; justify-content: space-between">
               <span>{{ t.weight }}</span>
               <span>{{ t.tips || '' }}</span>
             </div>
           </van-cell>
           <template #right>
-            <van-button @click="hadnleDeleteWeight(idx)" square type="danger" text="删除" />
+            <van-button
+              @click="hadnleDeleteWeight(idx)"
+              square
+              type="danger"
+              text="删除"
+            />
           </template>
         </van-swipe-cell>
       </div>
@@ -69,7 +88,12 @@
       @confirm="handleSurePeople"
     >
       <div class="people-dialog">
-        <UnderInput v-model="newPoepleName" placeholder="昵称" tips="输入要记录的家人昵称" icon="manager-o" />
+        <UnderInput
+          v-model="newPeopleName"
+          placeholder="昵称"
+          tips="输入要记录的家人昵称"
+          icon="manager-o"
+        />
       </div>
     </van-dialog>
     <!-- 添加记录弹窗 -->
@@ -137,10 +161,8 @@
   </div>
 </template>
 <script setup lang="ts">
-import { Dialog, Toast, Search } from 'vant'
-import {
-  computed, onMounted, reactive, ref, watchEffect,
-} from 'vue'
+import { Dialog, Toast } from 'vant'
+import { computed, onMounted, reactive, ref, watchEffect } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 import { formatDate } from '@/utils/stringUtil'
@@ -148,13 +170,14 @@ import { familyApi, recordApi } from '@/apis'
 import UnderInput from '@/components/UnderInput.vue'
 import { getWeightDiff, getTimeDiffDes } from './index'
 
+const VanDialog = Dialog.Component
 const store = useStore()
 
 const themeColor = ref('#1989fa')
 
 const router = useRouter()
 const handleBack = () => {
-  router.back()
+  router.go(-1)
 }
 
 const state = reactive({
@@ -164,7 +187,7 @@ const state = reactive({
   showCalendar: false,
   date: '',
   weight: 0,
-  tips: '',
+  tips: ''
 })
 
 // 默认选择
@@ -175,10 +198,14 @@ const { weights, peopleOption } = store.state.weight as WeightState
 const searchWeight = ref('')
 
 // 实际展示的列表
-const showWeights = computed(() => weights.filter((w) => {
-  if (!searchWeight.value) return true
-  return `${formatDate(w.date)}${w.tips || ''}${w.weight}`.includes(searchWeight.value)
-}))
+const showWeights = computed(() =>
+  weights.filter((w) => {
+    if (!searchWeight.value) return true
+    return `${formatDate(w.date)}${w.tips || ''}${w.weight}`.includes(
+      searchWeight.value
+    )
+  })
+)
 
 const refreshRecord = (familyId: string) => {
   store.dispatch('weight/getRecords', { familyId })
@@ -192,36 +219,37 @@ const handleSelectPeople = (value: string) => {
   refreshRecord(value)
 }
 // 添加家人相关
-const newPoepleName = ref('')
+const newPeopleName = ref('')
 const showAddPeople = ref(false)
 const handleAddPeople = () => {
   showAddPeople.value = true
 }
 const onOpenPeoplDialog = () => {
-  newPoepleName.value = ''
+  newPeopleName.value = ''
 }
 const handleSurePeople = () => {
-  if (!newPoepleName.value) {
+  if (!newPeopleName.value) {
     return
   }
   // 去重
-  if (peopleOption.find((v) => v.text === newPoepleName.value)) {
+  if (peopleOption.find((v) => v.text === newPeopleName.value)) {
     Toast.fail('名称已存在')
     return
   }
   showAddPeople.value = false
-  familyApi.addPeople(newPoepleName.value).then((res) => {
+  familyApi.addPeople(newPeopleName.value).then((res) => {
     Toast.success('添加成功')
     const { familyId } = res.data
     peopleOption.push({
-      text: newPoepleName.value,
-      value: familyId,
+      text: newPeopleName.value,
+      value: familyId
     })
     // 缓存数据
     localStorage.setItem('families', JSON.stringify(peopleOption.slice(1)))
 
     // 刷新选择
     state.people = familyId
+    handleSelectPeople(familyId)
   })
 }
 
@@ -269,7 +297,7 @@ const handleSureRecord = () => {
       weight,
       date: +date,
       recordId,
-      tips,
+      tips
     }
     if (idx === -1) {
       weights.push(w)
@@ -288,7 +316,7 @@ const handleSureRecord = () => {
 const hadnleDeleteWeight = (idx: number) => {
   Dialog.confirm({
     title: '提示',
-    message: '确认移除此条记录？',
+    message: '确认移除此条记录？'
   })
     .then(() => {
       recordApi.delRecord(weights[idx].recordId).then(() => {
@@ -310,28 +338,28 @@ const overviewData = computed(() => {
   const lastTime = weights.length === 1 ? weights[0] : weights[1]
   res.push({
     text: `与上一次比较(${getTimeDiffDes(latest.date, lastTime.date)})`,
-    ...getWeightDiff(latest.weight, lastTime.weight),
+    ...getWeightDiff(latest.weight, lastTime.weight)
   })
   // 与今天第一次比较
   const todayData = weights.filter(
-    (v) => formatDate(now, 'yyyy-MM-dd') === formatDate(v.date, 'yyyy-MM-dd'),
+    (v) => formatDate(now, 'yyyy-MM-dd') === formatDate(v.date, 'yyyy-MM-dd')
   )
   if (todayData.length !== 0) {
     const todayFirst = todayData[todayData.length - 1]
     res.push({
       text: `与今天首次比较(${getTimeDiffDes(latest.date, todayFirst.date)})`,
-      ...getWeightDiff(latest.weight, todayFirst.weight),
+      ...getWeightDiff(latest.weight, todayFirst.weight)
     })
   }
   // 与本月第一次比较
   const monthData = weights.filter(
-    (v) => formatDate(now, 'yyyy-MM') === formatDate(v.date, 'yyyy-MM'),
+    (v) => formatDate(now, 'yyyy-MM') === formatDate(v.date, 'yyyy-MM')
   )
   if (monthData.length !== 0) {
     const monthFirst = monthData[monthData.length - 1]
     res.push({
       text: `与本月首次比较(${getTimeDiffDes(latest.date, monthFirst.date)})`,
-      ...getWeightDiff(latest.weight, monthFirst.weight),
+      ...getWeightDiff(latest.weight, monthFirst.weight)
     })
   }
   return res
@@ -344,8 +372,8 @@ watchEffect(() => {
       ...weights.map((v, idx) => ({
         weight: v.weight,
         date: v.date,
-        idx,
-      })),
+        idx
+      }))
     ]
     data.sort((a, b) => a.date - b.date)
     data.forEach((v, idx) => {
@@ -355,7 +383,7 @@ watchEffect(() => {
     // Step 1: 创建 Chart 对象
     const chart = new window.F2.Chart({
       el: mychart.value,
-      pixelRatio: window.devicePixelRatio, // 指定分辨率
+      pixelRatio: window.devicePixelRatio // 指定分辨率
     })
     const wMax = Math.max(...data.map((v) => v.weight))
     const wMin = Math.min(...data.map((v) => v.weight))
@@ -363,8 +391,8 @@ watchEffect(() => {
     chart.source(data, {
       weight: {
         min: wMin - buf > 0 ? wMin - buf : 0,
-        max: wMax + buf,
-      },
+        max: wMax + buf
+      }
     })
     chart.tooltip({
       showCrosshairs: true,
@@ -372,21 +400,21 @@ watchEffect(() => {
       background: {
         radius: 2,
         fill: '#1890FF',
-        padding: [3, 5],
+        padding: [3, 5]
       },
       nameStyle: {
-        fill: '#fff',
+        fill: '#fff'
       },
       onShow: function onShow(ev) {
         const { items } = ev
         const { date } = items[0].origin
         items[0].name = `时间${formatDate(date, 'yyyy-MM-dd hh:mm')} 体重`
-      },
+      }
     })
     chart.line().position('idx*weight')
     chart.point().position('idx*weight').style({
       lineWidth: 1,
-      stroke: '#fff',
+      stroke: '#fff'
     })
 
     chart.interaction('pan')
@@ -395,8 +423,8 @@ watchEffect(() => {
     chart.scrollBar({
       mode: 'x',
       xStyle: {
-        size: 2,
-      },
+        size: 2
+      }
     })
 
     // 绘制 tag
@@ -418,7 +446,7 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
-@import "./index.scss";
+@import './index.scss';
 .van-cell {
   justify-content: space-between;
 }

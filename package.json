@@ -12,12 +12,11 @@
     "axios": "^0.21.4",
     "echarts": "^5.2.2",
     "vant": "^3.6.3",
-    "vue": "^3.2.26",
-    "vue-router": "^4.0.12",
+    "vue": "^3.2.40",
+    "vue-router": "^4.1.5",
     "vuex": "^4.0.2"
   },
   "devDependencies": {
-    "@cloudbase/cli": "^1.12.0",
     "@types/node": "^15.14.9",
     "@typescript-eslint/eslint-plugin": "^4.33.0",
     "@typescript-eslint/parser": "^4.33.0",
