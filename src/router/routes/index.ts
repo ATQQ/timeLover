@@ -11,23 +11,23 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/',
     name: 'home',
-    component: Home,
+    component: Home
   },
   {
     path: '/login',
     name: 'login',
-    component: Login,
+    component: Login
   },
   {
     path: '/dashboard',
     name: 'dashboard',
-    component: DashBoard,
+    component: DashBoard
   },
   {
     path: '/funs/weight',
     name: 'weight',
-    component: Weight,
-  },
+    component: Weight
+  }
 ]
 
 export default routes

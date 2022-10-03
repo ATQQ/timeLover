@@ -6,7 +6,7 @@ const store: Module<WeightState, unknown> = {
   state() {
     return {
       weights: [],
-      peopleOption: [{ text: '默认', value: 'default' }],
+      peopleOption: [{ text: '默认', value: 'default' }]
     }
   },
   mutations: {
@@ -18,7 +18,7 @@ const store: Module<WeightState, unknown> = {
     },
     addPeopleOption(state, option) {
       state.peopleOption.push(option)
-    },
+    }
   },
   actions: {
     /**
@@ -35,7 +35,7 @@ const store: Module<WeightState, unknown> = {
         localStorage.removeItem(familyId)
       }
       context.commit('updateWeights', {
-        weights,
+        weights
       })
 
       // 获取实际数据
@@ -47,7 +47,7 @@ const store: Module<WeightState, unknown> = {
         // 刷新业务缓存
         localStorage.setItem(familyId, JSON.stringify(records))
         context.commit('updateWeights', {
-          weights: [...records],
+          weights: [...records]
         })
       })
     },
@@ -70,8 +70,8 @@ const store: Module<WeightState, unknown> = {
         context.commit('updatePeopleOptions', { families })
         localStorage.setItem('families', JSON.stringify(families))
       })
-    },
-  },
+    }
+  }
 }
 
 export default store
