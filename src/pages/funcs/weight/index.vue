@@ -181,7 +181,7 @@ const handleBack = () => {
 }
 
 const state = reactive({
-  people: 'default',
+  people: localStorage.getItem('currentPerson') || 'default',
   showTime: false,
   time: '',
   showCalendar: false,
@@ -193,7 +193,6 @@ const state = reactive({
 // 默认选择
 // 体重数据
 const { weights, peopleOption } = store.state.weight as WeightState
-
 // 搜索关键字
 const searchWeight = ref('')
 
@@ -217,7 +216,17 @@ const refreshFamilies = () => {
 // 切换成员
 const handleSelectPeople = (value: string) => {
   refreshRecord(value)
+  localStorage.setItem('currentPerson', value)
 }
+
+watchEffect(() => {
+  const isExist = !!peopleOption.find((v) => v.value === state.people)
+  if (!isExist && peopleOption.length > 1) {
+    state.people = 'default'
+    handleSelectPeople('default')
+  }
+})
+
 // 添加家人相关
 const newPeopleName = ref('')
 const showAddPeople = ref(false)
