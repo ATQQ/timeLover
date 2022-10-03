@@ -6,6 +6,10 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
+import 'vant/es/toast/style';
+import 'vant/es/dialog/style';
+import 'vant/es/notify/style';
+import 'vant/es/image-preview/style';
 
 export default defineComponent({
   name: 'App',
