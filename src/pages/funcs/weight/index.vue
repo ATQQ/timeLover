@@ -43,8 +43,9 @@
       <canvas ref="mychart" style="width: 100%; height: 220px"></canvas>
       <van-divider
         :style="{ color: '#1989fa', borderColor: '#1989fa', padding: '0 16px' }"
-        >体重记录</van-divider
-      >
+        >体重记录（{{ isKG ? 'kg' : '斤' }}）
+        <van-switch v-model="isKG" :size="18" inactive-color="#e8ffee"
+      /></van-divider>
       <van-search
         v-model="searchWeight"
         placeholder="请输入过滤关键词"
@@ -59,7 +60,7 @@
             :title="formatDate(t.date)"
           >
             <div style="display: flex; justify-content: space-between">
-              <span>{{ t.weight }}</span>
+              <span>{{ (isKG ? t.weight : t.weight * 2).toFixed(2) }}</span>
               <span>{{ t.tips || '' }}</span>
             </div>
           </van-cell>
@@ -128,7 +129,7 @@
           clickable
           type="number"
           name="weight"
-          label="体重(公斤)"
+          :label="`体重(${isKG ? 'kg' : '斤'})`"
           placeholder="点击设置体重"
         />
         <van-field
@@ -170,6 +171,10 @@ import { familyApi, recordApi } from '@/apis'
 import UnderInput from '@/components/UnderInput.vue'
 import { getWeightDiff, getTimeDiffDes } from './index'
 
+const isKG = ref(localStorage.getItem('weight-kg') === 'true')
+watchEffect(() => {
+  localStorage.setItem('weight-kg', `${isKG.value}`)
+})
 const VanDialog = Dialog.Component
 const store = useStore()
 
@@ -271,6 +276,9 @@ const handleAddRecord = () => {
   state.time = formatDate(now, 'hh:mm')
   // 展示最近一次的记录
   state.weight = weights.length > 0 ? weights[0].weight : 50.0
+  if (!isKG.value) {
+    state.weight *= 2
+  }
   showAddRecord.value = true
 }
 
@@ -295,7 +303,7 @@ const handleSureRecord = () => {
   if (weight <= 0) {
     return
   }
-  weight = +weight.toFixed(2)
+  weight = +(isKG.value ? weight : weight / 2).toFixed(2)
   // 按时间顺序插入
   const idx = weights.findIndex((v) => v.date <= date)
   const { tips } = state

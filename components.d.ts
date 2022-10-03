@@ -25,5 +25,6 @@ declare module '@vue/runtime-core' {
     VanPopup: typeof import('vant/es')['Popup']
     VanSearch: typeof import('vant/es')['Search']
     VanSwipeCell: typeof import('vant/es')['SwipeCell']
+    VanSwitch: typeof import('vant/es')['Switch']
   }
 }
