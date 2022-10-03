@@ -3,8 +3,8 @@ import weight from './modules/weight'
 // Create a new store instance.
 const store = createStore({
   modules: {
-    weight,
-  },
+    weight
+  }
 })
 
 export default store

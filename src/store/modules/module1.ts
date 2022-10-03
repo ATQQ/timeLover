@@ -8,13 +8,13 @@ const store: Module<State, unknown> = {
   namespaced: true,
   state() {
     return {
-      count: 0,
+      count: 0
     }
   },
   getters: {
     isEven(state) {
       return state.count % 2 === 0
-    },
+    }
   },
   // 只能同步
   mutations: {
@@ -23,7 +23,7 @@ const store: Module<State, unknown> = {
     },
     decrease(state) {
       state.count -= 1
-    },
+    }
   },
   // 支持异步,可以考虑引入API
   actions: {
@@ -32,8 +32,8 @@ const store: Module<State, unknown> = {
       setTimeout(() => {
         context.commit('decrease')
       }, 1000)
-    },
-  },
+    }
+  }
 }
 
 export default store

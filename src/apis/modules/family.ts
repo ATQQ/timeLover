@@ -6,11 +6,11 @@ function getList() {
 
 function addPeople(name: string) {
   return ajax.post('family/add', {
-    name,
+    name
   })
 }
 
 export default {
   getList,
-  addPeople,
+  addPeople
 }

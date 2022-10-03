@@ -7,19 +7,19 @@ import ajax from '../ajax'
 function getCode(phone: string) {
   return ajax.get('user/code', {
     params: {
-      phone,
-    },
+      phone
+    }
   })
 }
 
 function login(phone: string, code: string) {
   return ajax.post('user/login', {
     phone,
-    code,
+    code
   })
 }
 
 export default {
   getCode,
-  login,
+  login
 }
