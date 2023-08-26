@@ -1,0 +1,13 @@
+{
+  "extends": "@antfu",
+  "plugins": [
+    "todo-ddl"
+  ],
+  "rules": {
+    "no-console": "off",
+    "todo-ddl/diy": "warn",
+    "curly": "off",
+    "promise/param-names": "off",
+    "@typescript-eslint/comma-dangle": "off"
+  }
+}

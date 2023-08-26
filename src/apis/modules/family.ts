@@ -9,8 +9,19 @@ function addPeople(name: string) {
     name
   })
 }
+function updatePeople(familyId: string, name: string) {
+  return ajax.put(`family/update/${familyId}`, {
+    name
+  })
+}
+
+function deletePeople(familyId: string) {
+  return ajax.delete(`family/delete/${familyId}`)
+}
 
 export default {
   getList,
-  addPeople
+  addPeople,
+  updatePeople,
+  deletePeople
 }

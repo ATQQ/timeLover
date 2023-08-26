@@ -62,7 +62,7 @@ input {
   width: 100%;
 }
 .tips {
-  font-size: 0.5rem;
+  font-size: 0.8rem;
   color: #a6a6a6;
   padding: 0.5rem;
 }

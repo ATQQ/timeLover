@@ -23,13 +23,13 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { Dialog } from 'vant'
+import { showConfirmDialog } from 'vant'
 import { useRouter } from 'vue-router'
 import FunCard from './components/FunCard.vue'
 
 const router = useRouter()
 const handleLogout = () => {
-  Dialog.confirm({
+  showConfirmDialog({
     title: '提示',
     message: '确认注销登录吗?'
   })
