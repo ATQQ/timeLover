@@ -1,12 +1,6 @@
 <template>
   <div>
-    <van-nav-bar
-      title="体重记录"
-      @click-left="handleBack"
-      @click-right="handleAddPeople"
-      left-text="返回"
-      left-arrow
-    >
+    <van-nav-bar title="体重记录" @click-left="handleBack" @click-right="handleAddPeople" left-text="返回" left-arrow>
       <template #right>
         <van-icon name="plus" size="18" />
       </template>
@@ -14,18 +8,11 @@
     <!-- 选人 -->
     <header>
       <van-dropdown-menu :active-color="themeColor">
-        <van-dropdown-item
-          @change="handleSelectPeople"
-          v-model="state.people"
-          :options="peopleOption"
-        />
+        <van-dropdown-item @change="handleSelectPeople" v-model="state.people" :options="peopleOption" />
       </van-dropdown-menu>
     </header>
 
-    <van-empty
-      v-if="weights.length === 0"
-      description="没有记录，点击右下角 + 添加"
-    />
+    <van-empty v-if="weights.length === 0" description="没有记录，点击右下角 + 添加" />
     <main v-else>
       <!-- 最近一次的记录 -->
       <h2 class="current-time">{{ formatDate(weights[0].date) }}</h2>
@@ -41,36 +28,20 @@
         <span class="res">{{ t.res }}</span>
       </p>
       <canvas ref="mychart" style="width: 100%; height: 220px"></canvas>
-      <van-divider
-        :style="{ color: '#1989fa', borderColor: '#1989fa', padding: '0 16px' }"
-        >体重记录（{{ isKG ? 'kg' : '斤' }}）
-        <van-switch v-model="isKG" :size="18" inactive-color="#e8ffee"
-      /></van-divider>
-      <van-search
-        v-model="searchWeight"
-        placeholder="请输入过滤关键词"
-        input-align="center"
-      />
+      <van-divider :style="{ color: '#1989fa', borderColor: '#1989fa', padding: '0 16px' }">体重记录（{{ isKG ? 'kg' : '斤' }}）
+        <van-switch v-model="isKG" :size="18" inactive-color="#e8ffee" /></van-divider>
+      <van-search v-model="searchWeight" placeholder="请输入过滤关键词" input-align="center" />
 
       <div class="weight-list">
         <van-swipe-cell v-for="(t, idx) in showWeights" :key="idx">
-          <van-cell
-            :title-style="{ flex: 1.1 }"
-            :border="false"
-            :title="formatDate(t.date)"
-          >
+          <van-cell :title-style="{ flex: 1.1 }" :border="false" :title="formatDate(t.date)">
             <div style="display: flex; justify-content: space-between">
               <span>{{ (isKG ? t.weight : t.weight * 2).toFixed(2) }}</span>
               <span>{{ t.tips || '' }}</span>
             </div>
           </van-cell>
           <template #right>
-            <van-button
-              @click="hadnleDeleteWeight(idx)"
-              square
-              type="danger"
-              text="删除"
-            />
+            <van-button @click="hadnleDeleteWeight(idx)" square type="danger" text="删除" />
           </template>
         </van-swipe-cell>
       </div>
@@ -80,89 +51,36 @@
       <van-icon name="plus" size="20" />
     </div>
     <!-- 添加家人弹窗 -->
-    <van-dialog
-      v-model:show="showAddPeople"
-      title="添加家人"
-      :confirm-button-color="themeColor"
-      show-cancel-button
-      @open="onOpenPeoplDialog"
-      @confirm="handleSurePeople"
-    >
+    <van-dialog v-model:show="showAddPeople" title="添加家人" :confirm-button-color="themeColor" show-cancel-button
+      @open="onOpenPeoplDialog" @confirm="handleSurePeople">
       <div class="people-dialog">
-        <UnderInput
-          v-model="newPeopleName"
-          placeholder="昵称"
-          tips="输入要记录的家人昵称"
-          icon="manager-o"
-        />
+        <UnderInput v-model="newPeopleName" placeholder="昵称" tips="输入要记录的家人昵称" icon="manager-o" />
       </div>
     </van-dialog>
     <!-- 添加记录弹窗 -->
-    <van-dialog
-      v-model:show="showAddRecord"
-      title="录入记录"
-      confirm-button-color="#1989fa"
-      show-cancel-button
-      @confirm="handleSureRecord"
-    >
+    <van-dialog v-model:show="showAddRecord" title="录入记录" confirm-button-color="#1989fa" show-cancel-button
+      @confirm="handleSureRecord">
       <div class="record-dialog">
-        <van-field
-          v-model="state.date"
-          readonly
-          clickable
-          name="calendar"
-          label="日期"
-          placeholder="点击选择日期"
-          @click="state.showCalendar = true"
-        />
-        <van-field
-          v-model="state.time"
-          readonly
-          clickable
-          name="datetimePicker"
-          label="时间"
-          placeholder="点击选择时间"
-          @click="state.showTime = true"
-        />
-        <van-field
-          v-model="state.weight"
-          clickable
-          type="number"
-          name="weight"
-          :label="`体重(${isKG ? 'kg' : '斤'})`"
-          placeholder="点击设置体重"
-        />
-        <van-field
-          v-model="state.tips"
-          clickable
-          type="text"
-          name="tips"
-          label="备注"
-          placeholder="(选填)"
-        />
+        <van-field v-model="state.date" readonly clickable name="calendar" label="日期" placeholder="点击选择日期"
+          @click="state.showCalendar = true" />
+        <van-field v-model="state.time" readonly clickable name="datetimePicker" label="时间" placeholder="点击选择时间"
+          @click="state.showTime = true" />
+        <van-field v-model="state.weight" clickable type="number" name="weight" :label="`体重(${isKG ? 'kg' : '斤'})`"
+          placeholder="点击设置体重" />
+        <van-field v-model="state.tips" clickable type="text" name="tips" label="备注" placeholder="(选填)" />
       </div>
     </van-dialog>
     <!-- 时间 -->
     <van-popup v-model:show="state.showTime" position="bottom">
-      <van-datetime-picker
-        v-model="state.time"
-        type="time"
-        @confirm="handleSureTime"
-        @cancel="state.showTime = false"
-      />
+      <van-date-picker v-model="state.time" type="time" @confirm="handleSureTime" @cancel="state.showTime = false" />
     </van-popup>
     <!-- 日历 -->
-    <van-calendar
-      :min-date="minDate"
-      :max-date="maxDate"
-      :color="themeColor"
-      v-model:show="state.showCalendar"
-      @confirm="handleSureDate"
-    />
+    <van-calendar :min-date="minDate" :max-date="maxDate" :color="themeColor" v-model:show="state.showCalendar"
+      @confirm="handleSureDate" />
   </div>
 </template>
 <script setup lang="ts">
-import { Dialog, Toast } from 'vant'
+import { showConfirmDialog, showSuccessToast, showFailToast } from 'vant'
 import { computed, onMounted, reactive, ref, watchEffect } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
@@ -175,7 +93,7 @@ const isKG = ref(localStorage.getItem('weight-kg') === 'true')
 watchEffect(() => {
   localStorage.setItem('weight-kg', `${isKG.value}`)
 })
-const VanDialog = Dialog.Component
+
 const store = useStore()
 
 const themeColor = ref('#1989fa')
@@ -247,12 +165,12 @@ const handleSurePeople = () => {
   }
   // 去重
   if (peopleOption.find((v) => v.text === newPeopleName.value)) {
-    Toast.fail('名称已存在')
+    showFailToast('名称已存在')
     return
   }
   showAddPeople.value = false
   familyApi.addPeople(newPeopleName.value).then((res) => {
-    Toast.success('添加成功')
+    showSuccessToast('添加成功')
     const { familyId } = res.data
     peopleOption.push({
       text: newPeopleName.value,
@@ -321,7 +239,7 @@ const handleSureRecord = () => {
     } else {
       weights.splice(idx, 0, w)
     }
-    Toast.success('记录成功')
+    showSuccessToast('记录成功')
     // 缓存数据
     localStorage.setItem(state.people, JSON.stringify(weights))
   })
@@ -331,7 +249,7 @@ const handleSureRecord = () => {
 
 // 删除记录
 const hadnleDeleteWeight = (idx: number) => {
-  Dialog.confirm({
+  showConfirmDialog({
     title: '提示',
     message: '确认移除此条记录？'
   })
@@ -464,9 +382,11 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 @import './index.scss';
+
 .van-cell {
   justify-content: space-between;
 }
+
 .add-record {
   position: fixed;
   right: 2rem;
@@ -480,6 +400,7 @@ onMounted(() => {
   justify-content: center;
   align-items: center;
 }
+
 .jin {
   font-size: 1rem;
   line-height: 1rem;

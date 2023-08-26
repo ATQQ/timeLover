@@ -45,7 +45,7 @@
 </template>
 <script lang="ts" setup>
 import { computed, onMounted, ref } from 'vue'
-import { Toast } from 'vant'
+import { showSuccessToast,showFailToast } from 'vant'
 import { useRouter } from 'vue-router'
 import UnderInput from '@/components/UnderInput.vue'
 import { rCode, rMobile } from '@/utils/regexp'
@@ -80,10 +80,10 @@ const getCode = () => {
   userApi
     .getCode(phone.value)
     .then((res) => {
-      Toast.success('发送成功')
+      showSuccessToast('发送成功')
     })
     .catch((err) => {
-      Toast.fail(err.msg)
+      showFailToast(err.msg)
     })
 }
 
@@ -103,7 +103,7 @@ const handleLogin = () => {
       })
     })
     .catch(() => {
-      Toast.fail('验证码不对')
+      showFailToast('验证码不对')
     })
 }
 // 禁用登录按钮

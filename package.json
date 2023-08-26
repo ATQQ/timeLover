@@ -9,30 +9,30 @@
     "lint": "eslint --fix ./src --ext .ts,.d.ts,.js"
   },
   "dependencies": {
-    "axios": "^0.21.4",
-    "echarts": "^5.2.2",
-    "vant": "^3.6.3",
-    "vue": "^3.2.40",
-    "vue-router": "^4.1.5",
-    "vuex": "^4.0.2"
+    "axios": "^1.4.0",
+    "echarts": "^5.4.3",
+    "vant": "^4.6.6",
+    "vue": "^3.3.4",
+    "vue-router": "^4.2.4",
+    "vuex": "^4.1.0"
   },
   "devDependencies": {
-    "@types/node": "^15.14.9",
-    "@typescript-eslint/eslint-plugin": "^4.33.0",
-    "@typescript-eslint/parser": "^4.33.0",
-    "@vitejs/plugin-legacy": "^2.0.0",
-    "@vitejs/plugin-vue": "^3.0.1",
-    "eslint": "^7.32.0",
+    "@types/node": "^16.18.46",
+    "@typescript-eslint/eslint-plugin": "^6.4.1",
+    "@typescript-eslint/parser": "^6.4.1",
+    "@vitejs/plugin-legacy": "^4.1.1",
+    "@vitejs/plugin-vue": "^4.3.3",
+    "eslint": "^8.48.0",
     "eslint-config-airbnb-base": "^14.2.1",
-    "eslint-config-prettier": "^8.5.0",
-    "eslint-plugin-import": "^2.26.0",
-    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-import": "^2.28.1",
+    "eslint-plugin-prettier": "^5.0.0",
     "eslint-plugin-todo-ddl": "^1.1.1",
-    "eslint-plugin-vue": "^7.20.0",
-    "prettier": "^2.7.1",
-    "sass": "^1.45.1",
-    "typescript": "^4.5.4",
-    "unplugin-vue-components": "^0.22.7",
-    "vite": "^3.1.4"
+    "eslint-plugin-vue": "^9.17.0",
+    "prettier": "^3.0.2",
+    "sass": "^1.66.1",
+    "typescript": "^5.2.2",
+    "unplugin-vue-components": "^0.25.1",
+    "vite": "^4.4.9"
   }
 }
