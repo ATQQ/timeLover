@@ -19,7 +19,7 @@ const themeColor = ref('#1989fa')
 
 const router = useRouter()
 function handleBack() {
-  router.go(-1)
+  router.replace('/dashboard')
 }
 
 const state = reactive({
