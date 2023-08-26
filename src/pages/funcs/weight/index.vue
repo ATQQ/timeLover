@@ -26,6 +26,7 @@ const state = reactive({
   people: localStorage.getItem('currentPerson') || 'default',
   showTime: false,
   time: '',
+  timeValue: [],
   showCalendar: false,
   date: '',
   weight: 0,
@@ -112,6 +113,7 @@ function handleAddRecord() {
   const now = new Date()
   state.date = formatDate(now, 'yyyy/MM/dd')
   state.time = formatDate(now, 'hh:mm')
+  state.timeValue = state.time.split(':')
   // 展示最近一次的记录
   state.weight = weights.length > 0 ? weights[0].weight : 50.0
   if (!isKG.value) {
@@ -121,8 +123,8 @@ function handleAddRecord() {
 }
 
 // 时间选择
-function handleSureTime(time: string) {
-  state.time = time
+function handleSureTime(timeSelect) {
+  state.time = timeSelect.selectedValues.join(':')
   state.showTime = false
 }
 // 日期选择:前1周
@@ -434,8 +436,7 @@ onMounted(() => {
     </van-dialog>
     <!-- 时间 -->
     <van-popup v-model:show="state.showTime" position="bottom">
-      <!-- eslint-disable-next-line vue/valid-v-model -->
-      <van-date-picker v-model="(state.time as any)" type="time" @confirm="handleSureTime" @cancel="state.showTime = false" />
+      <van-time-picker v-model="state.timeValue" @confirm="handleSureTime" @cancel="state.showTime = false" />
     </van-popup>
     <!-- 日历 -->
     <van-calendar
