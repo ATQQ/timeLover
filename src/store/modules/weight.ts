@@ -1,4 +1,4 @@
-import { Module } from 'vuex'
+import type { Module } from 'vuex'
 import { familyApi, recordApi } from '@/apis'
 
 const store: Module<WeightState, unknown> = {
@@ -14,7 +14,8 @@ const store: Module<WeightState, unknown> = {
       state.weights.splice(0, state.weights.length, ...payload.weights)
     },
     updatePeopleOptions(state, { families }) {
-      state.peopleOption.splice(1, state.peopleOption.length - 1, ...families)
+      const replaceIdx = families.some(v => v.value === 'default') ? 0 : 1
+      state.peopleOption.splice(replaceIdx, state.peopleOption.length - replaceIdx, ...families)
     },
     addPeopleOption(state, option) {
       state.peopleOption.push(option)
@@ -30,7 +31,8 @@ const store: Module<WeightState, unknown> = {
       let weights: any = localStorage.getItem(familyId)
       try {
         weights = weights ? JSON.parse(weights) : []
-      } catch {
+      }
+      catch {
         weights = []
         localStorage.removeItem(familyId)
       }
@@ -56,7 +58,8 @@ const store: Module<WeightState, unknown> = {
       let data: any = localStorage.getItem('families')
       try {
         data = data ? JSON.parse(data) : []
-      } catch {
+      }
+      catch {
         data = []
       }
       context.commit('updatePeopleOptions', { families: data })

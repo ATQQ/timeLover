@@ -1,9 +1,9 @@
 import axios from 'axios'
+import { showToast } from 'vant'
 
 const instance = axios.create({
-  baseURL: import.meta.env.VITE_APP_AXIOS_BASE_URL
+  baseURL: import.meta.env.VITE_APP_AXIOS_BASE_URL,
 })
-
 /**
  * 请求拦截
  */
@@ -11,7 +11,7 @@ instance.interceptors.request.use((config) => {
   const { method, params } = config
   // 附带鉴权的token
   const headers: any = {
-    token: localStorage.getItem('token')
+    token: localStorage.getItem('token'),
   }
   // 不缓存get请求
   if (method === 'get') {
@@ -22,13 +22,13 @@ instance.interceptors.request.use((config) => {
     headers['Content-type'] = 'application/json;'
     Object.assign(config, {
       data: params,
-      params: {}
+      params: {},
     })
   }
 
   return {
     ...config,
-    headers
+    headers,
   }
 })
 
@@ -49,5 +49,8 @@ instance.interceptors.response.use((v) => {
     return v.data
   }
   return v.data
+}, (err) => {
+  showToast(err?.message)
+  return Promise.reject(err)
 })
 export default instance
