@@ -1,51 +1,6 @@
-<template>
-  <div class="login">
-    <h1>
-      欢迎登录
-      <span>
-        <router-link to="/">时光恋人</router-link>
-      </span>
-    </h1>
-    <div class="input-list">
-      <UnderInput
-        tips="未注册的手机号，将自动进行注册"
-        v-model="phone"
-        placeholder="输入11位手机号"
-        icon="phone-o"
-        :max-length="11"
-      />
-      <UnderInput tips="4位数字" v-model="code" placeholder="输入收到的验证码" icon="like-o" :max-length="4" />
-    </div>
-    <div class="btn-list">
-      <van-button
-        :disabled="disableCode"
-        color="linear-gradient(120deg, #f093fb 0%, #f5576c 100%)"
-        @click="getCode"
-        block
-        size="small"
-        type="primary"
-      >{{ codeText }}</van-button>
-      <van-button
-        :disabled="disableLogin"
-        color="linear-gradient(120deg, #f093fb 0%, #f5576c 100%)"
-        @click="handleLogin"
-        block
-        size="small"
-        type="primary"
-      >登录</van-button>
-      <van-button
-        color="linear-gradient(120deg, #f093fb 0%, #f5576c 100%)"
-        @click="handleTestLogin"
-        block
-        size="small"
-        type="primary"
-      >使用测试号体验</van-button>
-    </div>
-  </div>
-</template>
 <script lang="ts" setup>
 import { computed, onMounted, ref } from 'vue'
-import { showSuccessToast,showFailToast } from 'vant'
+import { showFailToast, showSuccessToast } from 'vant'
 import { useRouter } from 'vue-router'
 import UnderInput from '@/components/UnderInput.vue'
 import { rCode, rMobile } from '@/utils/regexp'
@@ -59,7 +14,7 @@ const time = ref(0)
 /**
  * 获取验证码
  */
-const getCode = () => {
+function getCode() {
   if (time.value !== 0) {
     return
   }
@@ -89,7 +44,7 @@ const getCode = () => {
 
 const router = useRouter()
 
-const handleLogin = () => {
+function handleLogin() {
   userApi
     .login(phone.value, code.value)
     .then((res) => {
@@ -112,7 +67,7 @@ const disableLogin = computed(() => !rCode.test(code.value) || !rMobile.test(pho
 // 禁用验证码按钮
 const disableCode = computed(() => !rMobile.test(phone.value) || time.value !== 0)
 
-const handleTestLogin = () => {
+function handleTestLogin() {
   userApi.login('13245678910', '1234').then((res) => {
     const { token } = res.data
     localStorage.setItem('token', token)
@@ -134,6 +89,58 @@ onMounted(() => {
   }
 })
 </script>
+
+<template>
+  <div class="login">
+    <h1>
+      欢迎登录
+      <span>
+        <router-link to="/">时光恋人</router-link>
+      </span>
+    </h1>
+    <div class="input-list">
+      <UnderInput
+        v-model="phone"
+        tips="未注册的手机号，将自动进行注册"
+        placeholder="输入11位手机号"
+        icon="phone-o"
+        :max-length="11"
+      />
+      <UnderInput v-model="code" tips="4位数字" placeholder="输入收到的验证码" icon="like-o" :max-length="4" />
+    </div>
+    <div class="btn-list">
+      <van-button
+        :disabled="disableCode"
+        color="linear-gradient(120deg, #f093fb 0%, #f5576c 100%)"
+        block
+        size="small"
+        type="primary"
+        @click="getCode"
+      >
+        {{ codeText }}
+      </van-button>
+      <van-button
+        :disabled="disableLogin"
+        color="linear-gradient(120deg, #f093fb 0%, #f5576c 100%)"
+        block
+        size="small"
+        type="primary"
+        @click="handleLogin"
+      >
+        登录
+      </van-button>
+      <van-button
+        color="linear-gradient(120deg, #f093fb 0%, #f5576c 100%)"
+        block
+        size="small"
+        type="primary"
+        @click="handleTestLogin"
+      >
+        使用测试号体验
+      </van-button>
+    </div>
+  </div>
+</template>
 
 <style lang="scss" scoped>
 .login {

@@ -6,7 +6,8 @@
     "dev": "vite --host",
     "build": "vite build",
     "serve": "vite preview",
-    "lint": "eslint --fix ./src --ext .ts,.d.ts,.js"
+    "lint": "eslint --fix ./src --ext .ts,.d.ts,.js",
+    "deploy": "zx ./scripts/prod.mjs"
   },
   "dependencies": {
     "axios": "0.27.2",
