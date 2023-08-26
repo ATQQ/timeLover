@@ -313,6 +313,23 @@ async function handleSubmitEditInfo() {
   showEditFamilyName.value = false
   newFamilyName.value = ''
 }
+
+function handleDeleteFamily() {
+  showConfirmDialog({
+    title: '操作提示',
+    message: '确认移除此人员？'
+  })
+    .then(() => {
+      familyApi.deletePeople(state.people).then(() => {
+        showSuccessToast('删除成功')
+        // 刷新列表
+        refreshFamilies()
+        // 刷新选择
+        state.people = 'default'
+        handleSelectPeople('default')
+      })
+    })
+}
 onMounted(() => {
   refreshFamilies()
   refreshRecord(state.people)
@@ -333,6 +350,9 @@ onMounted(() => {
       </van-dropdown-menu>
       <span class="edit-family-name" @click="handleUpdateName">
         <van-icon name="edit" />
+      </span>
+      <span v-if="weights.length === 0 && state.people !== 'default'" class="delete-family-name" @click="handleDeleteFamily">
+        <van-icon name="delete" />
       </span>
     </header>
     <!-- 修改名字 -->
@@ -457,6 +477,11 @@ onMounted(() => {
   .edit-family-name{
     position: absolute;
     right: 1rem;
+    top: 30%;
+  }
+  .delete-family-name{
+    position: absolute;
+    left: 1rem;
     top: 30%;
   }
 }

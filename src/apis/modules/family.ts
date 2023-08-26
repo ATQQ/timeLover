@@ -15,8 +15,13 @@ function updatePeople(familyId: string, name: string) {
   })
 }
 
+function deletePeople(familyId: string) {
+  return ajax.delete(`family/delete/${familyId}`)
+}
+
 export default {
   getList,
   addPeople,
-  updatePeople
+  updatePeople,
+  deletePeople
 }
