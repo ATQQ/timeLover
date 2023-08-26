@@ -1,4 +1,5 @@
 import type { Module } from 'vuex'
+import { showToast } from 'vant'
 import { familyApi, recordApi } from '@/apis'
 
 const store: Module<WeightState, unknown> = {
@@ -41,7 +42,7 @@ const store: Module<WeightState, unknown> = {
       })
 
       // 获取实际数据
-      recordApi.getList(familyId).then((res) => {
+      recordApi.getList(familyId).then(async (res) => {
         const { records } = res.data
         records.forEach((r: any) => {
           r.date = +new Date(r.date)
