@@ -30,7 +30,8 @@ const state = reactive({
   showCalendar: false,
   date: '',
   weight: 0,
-  tips: ''
+  tips: '',
+  editRecordId: ''
 })
 
 // 默认选择
@@ -108,7 +109,9 @@ function handleSurePeople() {
 
 // 添加记录相关
 const showAddRecord = ref(false)
+const editMode = ref(false)
 function handleAddRecord() {
+  editMode.value = false
   // 展示当前时间
   const now = new Date()
   state.date = formatDate(now, 'yyyy/MM/dd')
@@ -136,7 +139,7 @@ function handleSureDate(date: Date) {
   state.showCalendar = false
 }
 
-// 添加记录
+// 修改/添加记录
 function handleSureRecord() {
   const date = new Date(`${state.date} ${state.time}`)
   let weight = +state.weight
@@ -144,6 +147,15 @@ function handleSureRecord() {
     return
   }
   weight = +(isKG.value ? weight : weight / 2).toFixed(2)
+  // 修改
+  if (editMode.value) {
+    recordApi.updateRecord(state.editRecordId, weight, date, state.tips).then(() => {
+      showSuccessToast('修改成功')
+      // 刷新列表
+      refreshRecord(state.people)
+    })
+    return
+  }
   // 按时间顺序插入
   const idx = weights.findIndex(v => v.date <= date)
   const { tips } = state
@@ -171,7 +183,7 @@ function handleSureRecord() {
 }
 
 // 删除记录
-function hadnleDeleteWeight(idx: number) {
+function handleDeleteWeight(idx: number) {
   showConfirmDialog({
     title: '提示',
     message: '确认移除此条记录？'
@@ -186,6 +198,23 @@ function hadnleDeleteWeight(idx: number) {
     .catch(() => {
       // on cancel
     })
+}
+function handleUpdateWeight(idx: number) {
+  const record = weights[idx]
+  state.editRecordId = record.recordId
+  editMode.value = true
+
+  // 展示当前时间
+  const now = new Date(record.date)
+  state.date = formatDate(now, 'yyyy/MM/dd')
+  state.time = formatDate(now, 'hh:mm')
+  state.timeValue = state.time.split(':')
+  // 展示最近一次的记录
+  state.weight = record.weight
+  if (!isKG.value) {
+    state.weight *= 2
+  }
+  showAddRecord.value = true
 }
 // 格式化内容展示
 const overviewData = computed(() => {
@@ -395,7 +424,8 @@ onMounted(() => {
             </div>
           </van-cell>
           <template #right>
-            <van-button square type="danger" text="删除" @click="hadnleDeleteWeight(idx)" />
+            <van-button square type="primary" text="编辑" @click="handleUpdateWeight(idx)" />
+            <van-button square type="danger" text="删除" @click="handleDeleteWeight(idx)" />
           </template>
         </van-swipe-cell>
       </div>
@@ -415,7 +445,7 @@ onMounted(() => {
     </van-dialog>
     <!-- 添加记录弹窗 -->
     <van-dialog
-      v-model:show="showAddRecord" title="录入记录" confirm-button-color="#1989fa" show-cancel-button
+      v-model:show="showAddRecord" :title="editMode ? '修改记录' : '录入记录'" confirm-button-color="#1989fa" show-cancel-button
       @confirm="handleSureRecord"
     >
       <div class="record-dialog">

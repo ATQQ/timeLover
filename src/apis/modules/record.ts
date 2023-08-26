@@ -17,6 +17,19 @@ function addRecord(
   })
 }
 
+function updateRecord(
+  recordId: string,
+  weight: number,
+  date: Date,
+  tips?: string
+) {
+  return ajax.put(`/record/${recordId}`, {
+    weight,
+    date,
+    tips
+  })
+}
+
 function delRecord(recordId: string) {
   return ajax.delete(`/record/${recordId}`)
 }
@@ -24,5 +37,6 @@ function delRecord(recordId: string) {
 export default {
   getList,
   addRecord,
-  delRecord
+  delRecord,
+  updateRecord
 }
