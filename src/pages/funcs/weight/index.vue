@@ -3,6 +3,7 @@ import { showConfirmDialog, showFailToast, showSuccessToast } from 'vant'
 import { computed, onMounted, reactive, ref, watchEffect } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
+import axios from 'axios'
 import { getTimeDiffDes, getWeightDiff } from './index'
 import { formatDate } from '@/utils/stringUtil'
 import { familyApi, recordApi } from '@/apis'
@@ -254,6 +255,7 @@ const overviewData = computed(() => {
 
 const mychart = ref(null as unknown as HTMLElement)
 watchEffect(() => {
+  // demo: https://antv-2018.alipay.com/zh-cn/f2/3.x/demo/interaction/pan-for-line-chart.html
   if (weights.length !== 0 && mychart.value) {
     const data = [
       ...weights.map((v, idx) => ({
@@ -279,6 +281,10 @@ watchEffect(() => {
       weight: {
         min: wMin - buf > 0 ? wMin - buf : 0,
         max: wMax + buf
+      },
+      idx: {
+        min: Math.floor(data.length / 2),
+        max: data.length + buf
       }
     })
     chart.tooltip({
@@ -314,15 +320,6 @@ watchEffect(() => {
       }
     })
 
-    // 绘制 tag
-    // chart.guide().tag({
-    //   position: [1969, 1344],
-    //   withPoint: false,
-    //   content: '1,344',
-    //   limitInPlot: true,
-    //   offsetX: 5,
-    //   direct: 'cr',
-    // })
     chart.render()
   }
 })
