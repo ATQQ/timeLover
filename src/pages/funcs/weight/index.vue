@@ -264,7 +264,7 @@ watchEffect(() => {
         idx
       }))
     ]
-    data.sort((a, b) => a.date - b.date)
+    data.sort((a, b) => +new Date(a.date) - +new Date(b.date))
     data.forEach((v, idx) => {
       v.idx = idx + 1
     })
