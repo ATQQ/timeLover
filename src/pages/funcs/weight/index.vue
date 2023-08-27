@@ -283,8 +283,8 @@ watchEffect(() => {
         max: wMax + buf
       },
       idx: {
-        min: Math.floor(data.length / 2),
-        max: data.length + buf
+        min: data.length - 10 > 0 ? data.length - 10 : 0,
+        max: data.length
       }
     })
     chart.tooltip({
