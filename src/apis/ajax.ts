@@ -44,6 +44,7 @@ instance.interceptors.response.use((v) => {
   }
   if (v.status === 200) {
     if (v.data.code !== 0) {
+      showToast(v.data?.msg)
       return Promise.reject(v.data)
     }
     return v.data
