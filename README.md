@@ -1,5 +1,5 @@
 # TimeLover(时光恋人)
->重启两年前的项目
+>新项目：https://github.com/ATQQ/echo-trails
 ## 简介
 一款情侣之间记录日常生活趣事,生活足迹的Web应用
 
